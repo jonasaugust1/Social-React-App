@@ -1,6 +1,7 @@
 import userIcon from '../images/user.svg'
 import clockIcon from '../images/clock.svg'
 import emptyFolderIcon from '../images/empty-folder.svg'
+import '../styles/Feed.css'
 
 // Para receber as props a passamos no parâmetro da função
 export default function Feed(props) { 
