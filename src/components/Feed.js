@@ -19,8 +19,8 @@ export default function Feed(props) {
     return (
         <>
             <header>
-                <h1>Seu Feed</h1>
-                <h2>Acompanhe o que seus amigos estão pennsandoo em tempo real</h2>
+                <h1>{props.title}</h1>
+                <h2>{props.subTitle}</h2>
             </header>
 
             <section className='feed'>
