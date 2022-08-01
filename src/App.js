@@ -1,38 +1,45 @@
-import './styles/App.css'
+import { useState } from 'react'
 import userIcon from './images/user.svg'
 import paperPlaneIcon from './images/paper-plane.svg'
 import clockIcon from './images/clock.svg'
 import emptyFolderIcon from './images/empty-folder.svg'
 import './styles/PostForm.css'
 import './styles/Feed.css'
+import './styles/App.css'
 
 
 export default function App() {
 
-    const posts = [
-        {
-            id: Math.random(),
-            content: 'Conteudo do Post',
-            userName: 'Jonas Augusto',
-            publishedAt: new Date(),
-        },
-        {
-            id: Math.random(),
-            content: 'Conteudo do Post',
-            userName: 'Miguel Joab',
-            publishedAt: new Date(),
-        },
-    ]
+    const [history, setHistory] = useState('')
 
-    // const posts = []
+    const [userName, setUserName] = useState('')
+
+    const [posts, setPosts] = useState([])
+
+    function handleSubmit(e) {
+        e.preventDefault()
+        
+        setPosts([
+            ...posts,
+            {
+                id: Math.random(),
+                content: history,
+                userName, //Como o nome da constante é o mesmo nome da chave podemos definir o userName assim
+                publishedAt: new Date(),
+            }
+        ])
+
+        setHistory('')
+        setUserName('')
+    }
 
     return (
         <div className='wrapper'>
-            <form className='post-form' onSubmit={() => alert('Formulário submetido')}>
-                <input placeholder="Escreva uma nova história..."/>
+            <form className='post-form' onSubmit={handleSubmit}>
+                <input value={history} placeholder="Escreva uma nova história..." onChange={(e) => setHistory(e.target.value)}/> {/* onChange para capturar o que o usuário está preenchendo no input*/}
                 <div>
                     <img src={userIcon} alt="Ícone de usuário"/>
-                    <input placeholder="Digite seu nome..." />
+                    <input value={userName} placeholder="Digite seu nome..." onChange={(e) => setUserName(e.target.value)}/> {/*Para controlar o valor que está no compo do input através do React, o valor que está lá dentro é o nosso estado usamos o value={state} */}
                     <button type="submit">
                         <img src={paperPlaneIcon} alt="Enviar"/>
                         Publicar
@@ -42,7 +49,7 @@ export default function App() {
 
             <main>
                 {
-                    posts.length > 0 && (
+                    posts && (
                         <>
                             <header>
                                 <h1>Seu Feed</h1>
@@ -71,7 +78,7 @@ export default function App() {
                 )}
 
                 {
-                    posts.length === 0 && (
+                    !posts && (
                     <div className='feed-status'>
                         <img src={emptyFolderIcon} alt="Pasta Vazia" />
                         <h1>Não encontramos nada</h1>
