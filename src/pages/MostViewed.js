@@ -9,27 +9,31 @@ export default function MostViewed() {
   const [hasError, setHasError] = useState(false)
 
   useEffect(() => {
-    fetch('http://localhost:3001/posts/most-viewed')
-      .then(async response => {
+    
+    async function loadPosts(){
 
-        if(!response.ok){
-          setHasError(true)
-          return
+        try {
+            const response = await  fetch('https://jonasaugusto-react-app.surge.sh/posts')
+
+            if(!response.ok){
+                setHasError(true)
+                return
+              }
+      
+              const body = await response.json()
+      
+              setPosts(body.map(post => ({
+                ...post,
+                publishedAt: new Date(post.publishedAt)
+              })))
+        } catch {
+            setHasError(true)
+        } finally {
+            setIsLoading(false)
         }
-        
-        const body = await response.json()
+    }
 
-        setPosts(body.map(post => ({
-          ...post,
-          publishedAt: new Date(post.publishedAt)
-        })))
-      })
-    .catch(() => {
-      setHasError(true)
-      })
-    .finally(() => {
-      setIsLoading(false)
-    })
+    loadPosts()
 
   }, [])
 

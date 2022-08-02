@@ -13,25 +13,26 @@ export default function PostForm(props) {
     const [errorMessage, setErrorMessage] = useState(null)
 
     // Essa função pega o onsubmit do component pai e envia o objeto enviando o state de history e userName
-    function handleSubmit(e){
-        e.preventDefault()
+    async function handleSubmit(e){
+        
+        try {
+            e.preventDefault()
 
-        setIsLoading(true)
-        setErrorMessage(null)
+            setIsLoading(true)
+            setErrorMessage(null)
 
-        fetch('http://localhost:3001/posts', {
-            method: 'POST',
-            body: JSON.stringify({
-                content: history,
-                userName,
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            } 
+            const response = await fetch('https://jonasaugusto-react-app.surge.sh/posts', {
+                method: 'POST',
+                body: JSON.stringify({
+                    content: history,
+                    userName,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                } 
             })
-            .then(async response => {
 
-                if(!response.ok) {
+            if(!response.ok) {
                 const body = await response.json()
                 
                 setErrorMessage(
@@ -40,17 +41,17 @@ export default function PostForm(props) {
                 return
                 }
 
-                props.onSubmit({history, userName})
+            props.onSubmit({history, userName})
 
-                setHistory('')
-                setUserName('')
-            })
-            .catch(() => {
+            setHistory('')
+            setUserName('')
+            
+            
+        } catch {
             setErrorMessage('Ocorreu um erro ao publicar uma mensagem!')
-            })
-            .finally(() => {
+        } finally {
             setIsLoading(false)
-            })
+        }
     }
     
     return (
