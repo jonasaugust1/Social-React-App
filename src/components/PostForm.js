@@ -4,6 +4,7 @@ import '../styles/PostForm.css'
 import loader from '../images/loader-white.svg'
 import userIcon from '../images/user.svg'
 import paperPlaneIcon from '../images/paper-plane.svg'
+import { create } from '../services/postService';
 
 export default function PostForm(props) {
 
@@ -21,31 +22,17 @@ export default function PostForm(props) {
             setIsLoading(true)
             setErrorMessage(null)
 
-            const response = await fetch('https://jonasaugusto-react-app.surge.sh/posts', {
-                method: 'POST',
-                body: JSON.stringify({
-                    content: history,
-                    userName,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                } 
-            })
+            const response = await create({history, userName})
 
-            if(!response.ok) {
-                const body = await response.json()
-                
-                setErrorMessage(
-                    errors[body.code] || 'Ocorreu um erro ao publicar uma mensagem!'
-                    )
+            if(response === true){
+                props.onSubmit({history, userName})
+
+                setHistory('')
+                setUserName('')
                 return
-                }
+            }
 
-            props.onSubmit({history, userName})
-
-            setHistory('')
-            setUserName('')
-            
+            setErrorMessage(response)
             
         } catch {
             setErrorMessage('Ocorreu um erro ao publicar uma mensagem!')
